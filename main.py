@@ -117,7 +117,7 @@ async def allergies(ctx, yr=YEAR):
   for us in users:
     u = us.to_dict()
     if u['food'] != '':
-      await ctx.author.send(f"{u['fullName']} - {u['alergies']}")
+      await ctx.author.send(f"{u['fullName']} - {u['food']}")
   await ctx.send('Done :)')
 
 def get_users(yr):
