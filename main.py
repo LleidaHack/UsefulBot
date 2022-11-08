@@ -123,23 +123,23 @@ async def allergies(ctx, yr=YEAR):
 @bot.command()
 async def allergies_more(ctx, yr=YEAR):
   users = get_users(yr)
-  await ctx.author.send('ALERGY DATA:')
-  al={'vegetarian':0, 'vegan':0, 'gluten':0, 'lactose':0}
+  al={'vegetaria':0, 'vega':0, 'gluten':0, 'lactosa':0}
   for us in users:
     u = us.to_dict()
     if u['food'] != '':
-      if 'vegetarian' in u['food']:
-        al['vegetarian']+=1
-      if 'vegan' in u['food']:
-        al['vegan']+=1
-      if 'gluten' in u['food']:
+      if 'vegetarian'.capitalize() in u['food'].capitalize():
+        al['vegetaria']+=1
+      if 'vegan'.capitalize() in u['food'].capitalize():
+        al['vega']+=1
+      if 'gluten'.capitalize() in u['food'].capitalize():
         al['gluten']+=1
-      if 'lactose' in u['food']:
-        al['lactose']+=1
-  print('vegetarian: ' + str(al['vegetarian']))
-  print('vegan: ' + str(al['vegan']))
-  print('gluten: ' + str(al['gluten']))
-  print('lactose: ' + str(al['lactose']))
+      if 'lactose'.capitalize() in u['food'].capitalize():
+        al['lactosa']+=1
+  await ctx.send('ALERGY DATA:')
+  await ctx.send('vegetarian: ' + str(al['vegetarian']))
+  await ctx.send('vegan: ' + str(al['vegan']))
+  await ctx.send('gluten: ' + str(al['gluten']))
+  await ctx.send('lactose: ' + str(al['lactose']))
   await ctx.send('Done :)')
 
 def get_users(yr):
