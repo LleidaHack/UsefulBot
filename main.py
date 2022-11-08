@@ -127,13 +127,13 @@ async def allergies_more(ctx, yr=YEAR):
   for us in users:
     u = us.to_dict()
     if u['food'] != '':
-      if 'vegetaria'.capitalize() in u['food'].capitalize():
+      if 'vegetaria'.upper() in u['food'].upper():
         al['vegetaria']+=1
-      if 'vega'.capitalize() in u['food'].capitalize():
+      if 'vega'.upper() in u['food'].upper():
         al['vega']+=1
-      if 'gluten'.capitalize() in u['food'].capitalize():
+      if 'gluten'.upper() in u['food'].upper():
         al['gluten']+=1
-      if 'lactosa'.capitalize() in u['food'].capitalize():
+      if 'lactosa'.upper() in u['food'].upper():
         al['lactosa']+=1
   await ctx.send('ALERGY DATA:')
   await ctx.send('vegetarian: ' + str(al['vegetaria']))
