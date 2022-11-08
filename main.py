@@ -120,6 +120,28 @@ async def allergies(ctx, yr=YEAR):
       await ctx.author.send(f"{u['fullName']} - {u['food']}")
   await ctx.send('Done :)')
 
+@bot.command()
+async def allergies_more(ctx, yr=YEAR):
+  users = get_users(yr)
+  await ctx.author.send('ALERGY DATA:')
+  al={'vegetarian':0, 'vegan':0, 'gluten':0, 'lactose':0}
+  for us in users:
+    u = us.to_dict()
+    if u['food'] != '':
+      if 'vegetarian' in u['food']:
+        al['vegetarian']+=1
+      if 'vegan' in u['food']:
+        al['vegan']+=1
+      if 'gluten' in u['food']:
+        al['gluten']+=1
+      if 'lactose' in u['food']:
+        al['lactose']+=1
+  print('vegetarian: ' + str(al['vegetarian']))
+  print('vegan: ' + str(al['vegan']))
+  print('gluten: ' + str(al['gluten']))
+  print('lactose: ' + str(al['lactose']))
+  await ctx.send('Done :)')
+
 def get_users(yr):
   users_ref = db.collection('hackeps-' + str(yr) + '/prod/users')
   return users_ref.stream()
