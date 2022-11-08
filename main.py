@@ -127,19 +127,19 @@ async def allergies_more(ctx, yr=YEAR):
   for us in users:
     u = us.to_dict()
     if u['food'] != '':
-      if 'vegetaria'.capitalize() in u['food'].capitalize():
+      if u['food'].capitalize().contains('Vegetaria'.capitalize()):
         al['vegetaria']+=1
-      if 'vega'.capitalize() in u['food'].capitalize():
+      if u['food'].capitalize().contains('Vega'.capitalize()):
         al['vega']+=1
-      if 'gluten'.capitalize() in u['food'].capitalize():
+      if u['food'].capitalize().contains('Gluten'.capitalize()):
         al['gluten']+=1
-      if 'lactosa'.capitalize() in u['food'].capitalize():
+      if u['food'].capitalize().contains('Lactosa'.capitalize()):
         al['lactosa']+=1
   await ctx.send('ALERGY DATA:')
   await ctx.send('vegetarian: ' + str(al['vegetaria']))
   await ctx.send('vegan: ' + str(al['vega']))
   await ctx.send('gluten: ' + str(al['gluten']))
-  await ctx.send('lactose: ' + str(al['lactosa']))
+  await ctx.send('lactosa: ' + str(al['lactosa']))
 
 def get_users(yr):
   users_ref = db.collection('hackeps-' + str(yr) + '/prod/users')
