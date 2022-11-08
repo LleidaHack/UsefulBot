@@ -110,6 +110,16 @@ async def minors_data(ctx, yr=YEAR):
       await ctx.author.send(f"{u['fullName']} - {u['birthDate']} - {age(datetime.strptime(u['birthDate'], '%Y-%m-%d'))} - {u['email']}")
   await ctx.send('Done :)')
 
+@bot.command()
+async def allergies(ctx, yr=YEAR):
+  users = get_users(yr)
+  await ctx.author.send('ALERGY DATA:')
+  for us in users:
+    u = us.to_dict()
+    if u['food'] != '':
+      await ctx.author.send(f"{u['fullName']} - {u['alergies']}")
+  await ctx.send('Done :)')
+
 def get_users(yr):
   users_ref = db.collection('hackeps-' + str(yr) + '/prod/users')
   return users_ref.stream()
