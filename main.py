@@ -121,6 +121,14 @@ async def allergies(ctx, yr=YEAR):
   await ctx.send('Done :)')
 
 @bot.command()
+async def users_no_team(ctx, yr=YEAR):
+  teams = [t.to_dict()['members'] for t in get_teams(YEAR)]
+  teamMembers = [m.get().id for t in teams for m in t]
+  usersId = [u.to_dict()['uid'] for u in get_users(YEAR)]
+  usersWithoutTeamId = [u for u in usersId if u not in teamMembers]
+  await ctx.send('Users with no team('+yr+')  ->  '+str(len(usersWithoutTeamId)))
+
+@bot.command()
 async def allergies_more(ctx, yr=YEAR):
   users = get_users(yr)
   al={'vegetaria':0, 'vega':0, 'gluten':0, 'lactosa':0}
