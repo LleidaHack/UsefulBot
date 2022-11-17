@@ -13,6 +13,7 @@ from datetime import datetime,date
 import Config
 
 YEAR='2022'
+ENV='dev'
 cred = credentials.Certificate(Config.DB_CERT)
 firebase_admin.initialize_app(cred)
 db = firestore.client()
@@ -149,12 +150,49 @@ async def allergies_more(ctx, yr=YEAR):
   await ctx.send('gluten: ' + str(al['gluten']))
   await ctx.send('lactose: ' + str(al['lactosa']))
 
+@bot.command()
+async def search(ctx, data, yr=YEAR):
+  usr_data=''
+  if '@' in data:
+    usr_data = get_user_by_email(data, yr)
+  else:
+    usr_data = get_user_by_uid(data, yr)
+  if usr_data == None:
+    await ctx.send('User not found')
+  else:
+    await ctx.send(usr_data.to_dict())
+
+@bot.command()
+async def unregister(ctx, uid, yr=YEAR):
+  usr_data = get_user_by_uid(uid, yr)
+  if usr_data == None:
+    await ctx.send('User not found')
+  else:
+    #delete registered field
+    usr_data.reference.update({'registered': firestore.DELETE_FIELD})
+    await ctx.send('User unregistered')
+
+def get_user_by_uid(uid, yr=YEAR):
+  users = get_users(yr)
+  for us in users:
+    u = us.to_dict()
+    if u['uid'] == uid:
+      return us
+  return None
+
+def get_user_by_email(email, yr=YEAR):
+  users = get_users(yr)
+  for u in users:
+    if u.to_dict()['email'] == email:
+      return u
+  return None
+
 def get_users(yr):
-  users_ref = db.collection('hackeps-' + str(yr) + '/prod/users')
+  users_ref = db.collection('hackeps-' + str(yr) + '/' + ENV + '/users')
   return users_ref.stream()
 
 def get_teams(yr):
-  teams_ref = db.collection('hackeps-' + str(yr) + '/prod/teams')
+  teams_ref = db.collection('hackeps-' + str(yr) + '/' + ENV + '/teams')
   return teams_ref.stream()
 
 @bot.event
