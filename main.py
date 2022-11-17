@@ -13,7 +13,7 @@ from datetime import datetime,date
 import Config
 
 YEAR='2022'
-ENV='dev'
+ENV='prod'
 cred = credentials.Certificate(Config.DB_CERT)
 firebase_admin.initialize_app(cred)
 db = firestore.client()
