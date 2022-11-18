@@ -202,6 +202,7 @@ async def update(ctx,yr=YEAR):
           except:
               row.append('')
       sheet.worksheet(YEAR).append_row(row)
+  await ctx.send('Done :)')
 
 def get_definition(yr):
     user=list(get_users(yr)[0].keys())
