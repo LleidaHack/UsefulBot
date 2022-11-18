@@ -205,19 +205,22 @@ async def update(ctx,yr=YEAR):
   await ctx.send('Done :)')
 
 def get_definition(yr):
-    user=list(get_users(yr)[0].keys())
-    user.insert(0, user.pop(user.index('uid')))
-    user.insert(1, user.pop(user.index('fullName')))
-    user.insert(2, user.pop(user.index('email')))
-    user.insert(3, user.pop(user.index('birthDate')))
-    user.insert(len(user)-1, user.pop(user.index('food')))
-    user.insert(len(user)-1, user.pop(user.index('accepted')))
-    user.insert(len(user)-1, user.pop(user.index('gdpr')))
-    user.insert(len(user)-1, user.pop(user.index('terms')))
-    user.insert(len(user)-1, user.pop(user.index('githubUrl')))
-    user.insert(len(user)-1, user.pop(user.index('linkedinUrl')))
-    user.insert(len(user)-1, user.pop(user.index('photoURL')))
-    return user
+  user=None
+  for u in get_users(yr):
+    user=list(u.to_dict().keys())
+    break
+  user.insert(0, user.pop(user.index('uid')))
+  user.insert(1, user.pop(user.index('fullName')))
+  user.insert(2, user.pop(user.index('email')))
+  user.insert(3, user.pop(user.index('birthDate')))
+  user.insert(len(user)-1, user.pop(user.index('food')))
+  user.insert(len(user)-1, user.pop(user.index('accepted')))
+  user.insert(len(user)-1, user.pop(user.index('gdpr')))
+  user.insert(len(user)-1, user.pop(user.index('terms')))
+  user.insert(len(user)-1, user.pop(user.index('githubUrl')))
+  user.insert(len(user)-1, user.pop(user.index('linkedinUrl')))
+  user.insert(len(user)-1, user.pop(user.index('photoURL')))
+  return user
 
 def get_user_by_uid(uid, yr=YEAR):
   users = get_users(yr)
