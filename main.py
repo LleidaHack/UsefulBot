@@ -8,6 +8,9 @@ import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
 
+import gspread
+from oauth2client.service_account import ServiceAccountCredentials
+
 from datetime import datetime,date
 
 import Config
@@ -18,6 +21,16 @@ cred = credentials.Certificate(Config.DB_CERT)
 firebase_admin.initialize_app(cred)
 db = firestore.client()
 
+
+def init_drive(): 
+  scope = ['https://spreadsheets.google.com/feeds',
+           'https://www.googleapis.com/auth/drive']
+  creds = ServiceAccountCredentials.from_json_keyfile_name(Config.CLIENT_KEY, scope)
+  client = gspread.authorize(creds)
+  return client
+
+client=init_drive()
+sheet=spreadsheet = client.open("USERS")
 
 bot = commands.Bot(command_prefix='!')
 
@@ -171,6 +184,39 @@ async def unregister(ctx, uid, yr=YEAR):
     #delete registered field
     usr_data.reference.update({'registered': firestore.DELETE_FIELD})
     await ctx.send('User unregistered')
+
+@bot.command()
+async def update(ctx,yr=YEAR):
+  users = get_users(yr)
+  definition = get_definition(yr)
+  #get uids from excel
+  uids = [e[0] for e in sheet.worksheet(YEAR).get_all_values()]
+  for us in users:
+    u = us.to_dict()
+    if not u['uid'] in uids:
+      #add user to excel
+      row = []
+      for key in definition:
+          try:
+              row.append(u[key])
+          except:
+              row.append('')
+      sheet.worksheet(YEAR).append_row(row)
+
+def get_definition(yr):
+    user=list(get_users(yr)[0].keys())
+    user.insert(0, user.pop(user.index('uid')))
+    user.insert(1, user.pop(user.index('fullName')))
+    user.insert(2, user.pop(user.index('email')))
+    user.insert(3, user.pop(user.index('birthDate')))
+    user.insert(len(user)-1, user.pop(user.index('food')))
+    user.insert(len(user)-1, user.pop(user.index('accepted')))
+    user.insert(len(user)-1, user.pop(user.index('gdpr')))
+    user.insert(len(user)-1, user.pop(user.index('terms')))
+    user.insert(len(user)-1, user.pop(user.index('githubUrl')))
+    user.insert(len(user)-1, user.pop(user.index('linkedinUrl')))
+    user.insert(len(user)-1, user.pop(user.index('photoURL')))
+    return user
 
 def get_user_by_uid(uid, yr=YEAR):
   users = get_users(yr)
