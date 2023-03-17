@@ -40,7 +40,7 @@ def age(birthdate):
     return age
 
 def year_age(birthdate, year):
-    year=int(year)
+    year = int(year)
     today = date(year, 1, 1)
     age = today.year - birthdate.year - ((today.month, today.day) < (birthdate.month, birthdate.day))
     return age
@@ -116,8 +116,11 @@ async def minors(ctx, yr=YEAR):
   i=0
   for us in users:
     u = us.to_dict()
-    if year_age(datetime.strptime(u["birthDate"], '%Y-%m-%d').date(), yr) < 18:
-      i+=1
+    try:
+      if year_age(datetime.strptime(u["birthDate"], '%Y-%m-%d').date(), yr) < 18:
+        i+=1
+    except:
+      pass
   await ctx.send('Minors(' + str(yr) + ')  ->  ' + str(i))
 
 @bot.command()
