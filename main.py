@@ -146,7 +146,7 @@ async def allergies(ctx, yr=YEAR):
 @bot.command()
 async def users_no_team(ctx, yr=YEAR):
   teams = [t.to_dict()['members'] for t in get_teams(YEAR)]
-  teamMembers = [m.get().id  for m in teams]
+  teamMembers = [m.get().id  for t in teams for m in t]
   usersId = [u.to_dict()['uid'] for u in get_users(YEAR)]
   usersWithoutTeamId = [u for u in usersId if u not in teamMembers]
   await ctx.send('Users with no team('+yr+')  ->  '+str(len(usersWithoutTeamId)))
