@@ -146,7 +146,7 @@ async def allergies(ctx, yr=YEAR):
 def catch(func, handle=lambda e : e, *args, **kwargs):
     try:
         return func(*args, **kwargs)
-    except Exception as e:
+    except:
         pass
 
 @bot.command()
