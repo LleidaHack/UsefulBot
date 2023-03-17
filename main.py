@@ -1,7 +1,7 @@
 # bot.py
 import os
-import discord
-from discord.ext import commands
+import nextcord
+from nextcord.ext import commands
 from dotenv import load_dotenv
 
 import firebase_admin
@@ -32,7 +32,8 @@ def init_drive():
 client=init_drive()
 sheet=spreadsheet = client.open("USERS")
 
-intents = discord.Intents.default()
+intents = nextcord.Intents.default()
+intents.message_content = True
 bot = commands.Bot(command_prefix='!', intents=intents)
 
 def age(birthdate):
