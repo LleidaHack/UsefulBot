@@ -32,7 +32,8 @@ def init_drive():
 client=init_drive()
 sheet=spreadsheet = client.open("USERS")
 
-bot = commands.Bot(command_prefix='!')
+intents = discord.Intents.default()
+bot = commands.Bot(command_prefix='!', intents=intents)
 
 def age(birthdate):
     today = date.today()
