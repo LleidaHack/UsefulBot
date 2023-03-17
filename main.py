@@ -40,6 +40,7 @@ def age(birthdate):
     return age
 
 def year_age(birthdate, year):
+    year=int(year)
     today = date(year, 1, 1)
     age = today.year - birthdate.year - ((today.month, today.day) < (birthdate.month, birthdate.day))
     return age
