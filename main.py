@@ -143,11 +143,17 @@ async def allergies(ctx, yr=YEAR):
       await ctx.author.send(f"{u['fullName']} - {u['food']}")
   await ctx.send('Done :)')
 
+def catch(func, handle=lambda e : e, *args, **kwargs):
+    try:
+        return func(*args, **kwargs)
+    except Exception as e:
+        pass
+
 @bot.command()
 async def users_no_team(ctx, yr=YEAR):
   teams = [t.to_dict()['members'] for t in get_teams(YEAR)]
   teamMembers = [m.get().id  for t in teams for m in t]
-  usersId = [u.to_dict()['uid'] for u in get_users(YEAR)]
+  usersId = [catch(u.to_dict()['uid']) for u in get_users(YEAR)]
   usersWithoutTeamId = [u for u in usersId if u not in teamMembers]
   await ctx.send('Users with no team('+yr+')  ->  '+str(len(usersWithoutTeamId)))
 
