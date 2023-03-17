@@ -39,6 +39,11 @@ def age(birthdate):
     age = today.year - birthdate.year - ((today.month, today.day) < (birthdate.month, birthdate.day))
     return age
 
+def year_age(birthdate, year):
+    today = date(year, 1, 1)
+    age = today.year - birthdate.year - ((today.month, today.day) < (birthdate.month, birthdate.day))
+    return age
+
 @bot.command()
 async def users(ctx, yr=YEAR):
   usrs = get_users(yr)
@@ -110,7 +115,7 @@ async def minors(ctx, yr=YEAR):
   i=0
   for us in users:
     u = us.to_dict()
-    if age(datetime.strptime(u["birthDate"], '%Y-%m-%d').date()) < 18:
+    if year_age(datetime.strptime(u["birthDate"], '%Y-%m-%d').date(), yr) < 18:
       i+=1
   await ctx.send('Minors(' + str(yr) + ')  ->  ' + str(i))
 
@@ -120,7 +125,7 @@ async def minors_data(ctx, yr=YEAR):
   await ctx.author.send('MINORS DATA:')
   for us in users:
     u = us.to_dict()
-    if age(datetime.strptime(u['birthDate'], '%Y-%m-%d').date()) < 18:
+    if year_age(datetime.strptime(u['birthDate'], '%Y-%m-%d').date(), yr) < 18:
       await ctx.author.send(f"{u['fullName']} - {u['birthDate']} - {age(datetime.strptime(u['birthDate'], '%Y-%m-%d'))} - {u['email']}")
   await ctx.send('Done :)')
 
@@ -137,7 +142,7 @@ async def allergies(ctx, yr=YEAR):
 @bot.command()
 async def users_no_team(ctx, yr=YEAR):
   teams = [t.to_dict()['members'] for t in get_teams(YEAR)]
-  teamMembers = [m.get().id for t in teams for m in t]
+  teamMembers = [m.get().id  for m in teams]
   usersId = [u.to_dict()['uid'] for u in get_users(YEAR)]
   usersWithoutTeamId = [u for u in usersId if u not in teamMembers]
   await ctx.send('Users with no team('+yr+')  ->  '+str(len(usersWithoutTeamId)))
