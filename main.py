@@ -14,8 +14,10 @@ from oauth2client.service_account import ServiceAccountCredentials
 from datetime import datetime,date
 
 import Config
+import json
+import requests
 
-YEAR='2022'
+YEAR='2023'
 ENV='prod'
 cred = credentials.Certificate(Config.DB_CERT)
 firebase_admin.initialize_app(cred)
@@ -255,8 +257,17 @@ def get_user_by_email(email, yr=YEAR):
   return None
 
 def get_users(yr):
-  users_ref = db.collection('hackeps-' + str(yr) + '/' + ENV + '/users')
+  if yr>=2023:
+    get_api_users(yr)
+  else:
+    users_ref = db.collection('hackeps-' + str(yr) + '/' + ENV + '/users')
   return users_ref.stream()
+
+def get_api_users(yr):
+  url = Config.BACK_URL + '/eventmanagment/1/status'
+  r = requests.get(url)
+  return (json.loads(r.content))
+
 
 def get_teams(yr):
   teams_ref = db.collection('hackeps-' + str(yr) + '/' + ENV + '/teams')
