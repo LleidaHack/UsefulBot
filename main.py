@@ -54,7 +54,7 @@ async def users(ctx, yr=YEAR):
   usrs = get_users(yr)
   i=0
   if int(yr)>=2023:
-    await cxt.send("users(" + str(yr) + ")  ->  " + str(usrs))
+    await ctx.send("users(" + str(yr) + ")  ->  " + str(usrs))
     return
   for u in usrs:
     i+=1
