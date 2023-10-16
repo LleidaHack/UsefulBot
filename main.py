@@ -53,6 +53,9 @@ def year_age(birthdate, year):
 async def users(ctx, yr=YEAR):
   usrs = get_users(yr)
   i=0
+  if int(yr)>=2023:
+    await cxt.send("users(" + str(yr) + ")  ->  " + str(usrs))
+    return
   for u in usrs:
     i+=1
   await ctx.send("users(" + str(yr) + ")  ->  " + str(i))
@@ -258,7 +261,7 @@ def get_user_by_email(email, yr=YEAR):
 
 def get_users(yr):
   if int(yr)>=2023:
-    return get_api_users(yr)
+    return get_api_users(yr)['registratedUsers']
   else:
     users_ref = db.collection('hackeps-' + str(yr) + '/' + ENV + '/users')
   return users_ref.stream()
