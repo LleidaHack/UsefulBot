@@ -258,7 +258,7 @@ def get_user_by_email(email, yr=YEAR):
 
 def get_users(yr):
   if int(yr)>=2023:
-    return get_api_users(yr)['registratedUsers']
+    return get_api_users(yr)
   else:
     users_ref = db.collection('hackeps-' + str(yr) + '/' + ENV + '/users')
   return users_ref.stream()
