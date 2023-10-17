@@ -54,7 +54,7 @@ async def users(ctx, yr=YEAR):
   usrs = get_users(yr)
   i=0
   if int(yr)>=2023:
-    await ctx.send("users(" + str(yr) + ")  ->  " + str(usrs))
+    await ctx.send("users(" + str(yr) + ")  ->  " + str(usrs['registratedUsers']))
     return
   for u in usrs:
     i+=1
@@ -64,22 +64,28 @@ async def users(ctx, yr=YEAR):
 async def assisted(ctx, yr=YEAR):
   users = get_users(yr)
   i=0
-  for us in users:
-    u=us.to_dict()
-    try:
-      if u['registered'] == True:
-        i+=1
-    except:
-      pass
-  await ctx.send("assisted(" + str(yr) + ")  ->  " + str(i))
+  if int(yr) >= 2023:
+    await ctx.send("assisted(" + str(yr) + ")  ->  " + str(users['participatingUsers']))
+  else:
+    for us in users:
+      u=us.to_dict()
+      try:
+        if u['registered'] == True:
+          i+=1
+      except:
+        pass
+    await ctx.send("assisted(" + str(yr) + ")  ->  " + str(i))
 
 @bot.command()
 async def teams(ctx, yr=YEAR):
   tms = get_teams(yr)
   i=0
-  for t in tms:
-    i+=1
-  await ctx.send("teams(" + str(yr) + ")  ->  " + str(i))
+  if int(yr)>=2023:
+    await ctx.send("teams(" + str(yr) + ")  ->  " + str(tms))
+  else:
+    for t in tms:
+      i+=1
+    await ctx.send("teams(" + str(yr) + ")  ->  " + str(i))
 
 @bot.command()
 async def sizes(ctx, yr=YEAR):
@@ -101,6 +107,8 @@ async def sizes(ctx, yr=YEAR):
 async def accepted(ctx, yr=YEAR):
   users = get_users(yr)
   i=0
+  if int(yr) >= 2023:
+    await ctx.send("Accepted users(" + str(yr) + ")  ->  " + str(users['acceptedUsers']))
   for us in users:
     u = us.to_dict()
     if u['accepted'] == 'YES':
@@ -261,7 +269,7 @@ def get_user_by_email(email, yr=YEAR):
 
 def get_users(yr):
   if int(yr)>=2023:
-    return get_api_users(yr)['registratedUsers']
+    return get_api_users(yr)
   else:
     users_ref = db.collection('hackeps-' + str(yr) + '/' + ENV + '/users')
   return users_ref.stream()
@@ -273,8 +281,11 @@ def get_api_users(yr):
 
 
 def get_teams(yr):
-  teams_ref = db.collection('hackeps-' + str(yr) + '/' + ENV + '/teams')
-  return teams_ref.stream()
+  if int(yr)>=2023:
+    return get_api_users(yr)['groups']
+  else:
+    teams_ref = db.collection('hackeps-' + str(yr) + '/' + ENV + '/teams')
+    return teams_ref.stream()
 
 @bot.event
 async def on_ready():
